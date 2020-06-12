@@ -1,0 +1,38 @@
+# docs [https://starship.rs/config/]
+
+prompt_order = [
+    "battery",
+    "time",
+    "directory",
+    "git_branch",
+    "git_commit",
+    "git_state",
+    "git_status",
+    "hg_branch",
+    "line_break",
+    "rust",
+    "nodejs",
+    "env_var",
+    "cmd_duration",
+    "line_break",
+    "character"
+]
+
+[directory]
+prefix = "in 🗺️  "
+
+[time]
+disabled = false
+format = "🕰️  %I:%M%p"
+
+[character]
+symbol = "➜"
+
+[package]
+disabled = true
+
+[nodejs]
+symbol = "🐸 node "
+
+[rust]
+symbol = "🦀 rust "

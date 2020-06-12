@@ -1,0 +1,32 @@
+# =====[ Plugins ]=====
+## Load em
+source "%val{config}/plugins/plug.kak/rc/plug.kak"
+
+## Language Server
+eval %sh{kak-lsp --kakoune -s ${kak_session}}
+lsp-enable
+
+## "SmartTab"
+plug "andreyorst/smarttab.kak"
+
+# =====[ Visual ]====
+## Relative line numbers
+add-highlighter global/ number-lines -relative -hlcursor -min-digits 3
+
+# =====[ Key Bindings ]=====
+## --- Normal Mode ---
+### Map comma-y to yank to clipboard!
+map global user y '<a-|>xclip -i -selection clipboard<ret>'
+
+## --- Insert Mode ---
+### Use j-k to exit
+hook global InsertChar k %{ try %{
+  exec -draft hH <a-k>jk<ret> d
+  exec <esc>
+}}
+
+### Tab behavior
+hook global ModuleLoaded smarttab %{
+    set-option global softtabstop 4 # tab = 4 spaces
+}
+hook global WinSetOption expandtab # always use spaces
