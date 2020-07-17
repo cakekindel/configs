@@ -2,6 +2,11 @@
 ## Initialize Plug.kak
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
 
+## fzf
+plug "andreyorst/fzf.kak"
+map global user f ': fzf-mode<ret>' \
+    -docstring "search using fzf"
+
 ## Language Server
 eval %sh{kak-lsp --kakoune -s ${kak_session}}
 lsp-enable
@@ -28,12 +33,21 @@ hook global InsertCompletionHide .* %{
 }
 
 # =====[ Visual ]=====
+## Faces
+
+# render whitespace same as Line Numbers, but dimmer
+face global Whitespace +d@LineNumbers
+
+# High contrast selection colors
+face global PrimarySelection black,blue+Ffg
+face global SecondarySelection black,white+Ffg
+
+# High contrast menu colors
+face global MenuForeground black,blue+Ffg
+face global MenuBackground black,white+Ffg
 
 ## Assistant
-set-option global ui_options "ncurses_assistant=cat"
-
-## Theme
-colorscheme base16-material-palenight
+#set-option global ui_options "ncurses_assistant=cat"
 
 ## Relative line numbers
 add-highlighter global/ number-lines -relative -hlcursor -min-digits 3
@@ -42,8 +56,6 @@ add-highlighter global/ number-lines -relative -hlcursor -min-digits 3
 add-highlighter global/ show-matching
 
 ## Render whitespace
-### Render whitespace same as Line Numbers, but dimmer
-face global Whitespace +d@LineNumbers
 add-highlighter global/ show-whitespaces
 
 # =====[ Key Bindings ]=====
@@ -51,18 +63,38 @@ add-highlighter global/ show-whitespaces
 map global user y "<a-|>xclip -i -selection clipboard<ret>" -docstring "yank current selection to system clipboard"
 map global user h ":lsp-hover<ret>" -docstring "trigger language server hover"
 
-map global user < "bi<lt><esc>a<gt><esc>m" \
-    -docstring "wrap current selection with angles <<sel>>"
+map global user < "_i<lt><esc>a<gt><esc>m" \
+    -docstring "trim + wrap current selection with angles"
 
-map global user o ",<lt>iOption<esc>B<a-:>" \
-    -docstring "wrap current selection with Option<<sel>>"
+map global user ( "_i(<esc>a)<esc>m" \
+    -docstring "trim + wrap current selection with parens"
 
-map global user r ",<lt>iResult<esc>wa, Error<esc>;b<a-:>" \
-    -docstring "wrap current selection with Result<<sel>, E>"
+map global user r ":enter-user-mode rust<ret>" \
+    -docstring "🦀"
 
-### if user mode gets fatter, consider making this <a-l>
-map global user l "i[<esc>a 🔗]<esc>m<a-:>" \
+### Markdown Mode
+declare-user-mode markdown
+map global markdown l "i[<esc>a 🔗]<esc>m<a-:>" \
     -docstring "surround current selection with markdown-style link + link emoji"
+
+### Rust Mode
+declare-user-mode rust
+
+map global rust R ",<lt>iResult<esc>wa, Error<esc>;b<a-:>" \
+    -docstring "Result<___>"
+map global rust o ",(iOk<esc>B<a-:>" \
+    -docstring "Ok(___)"
+map global rust e ",(iErr<esc>B<a-:>" \
+    -docstring "Err(___)"
+
+map global rust O ",<lt>iOption<esc>B<a-:>" \
+    -docstring "Option<___>"
+
+map global rust s ",(iSome<esc>B<a-:>" \
+    -docstring "Some(___)"
+map global rust n ",(iNone<esc>B<a-:>" \
+    -docstring "None(___)"
+
 
 ## --- Insert Mode ---
 ### Use j-k to exit
