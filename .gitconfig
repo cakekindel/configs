@@ -1,0 +1,35 @@
+[pull]
+ff = only
+
+[user]
+username = cakekindel
+name = Orion Kindel
+email = cakekindel@gmail.com
+signingkey = 6D4165AE4C928719
+
+[commit]
+gpgsign = true
+
+[gpg]
+program = gpg2
+
+[filter "lfs"]
+process = git-lfs filter-process
+required = true
+clean = git-lfs clean -- %f
+smudge = git-lfs smudge -- %f
+
+[init]
+defaultBranch = main
+
+[core]
+editor = kak
+
+[diff]
+algorithm = minimal
+
+[merge]
+strategy = recursive
+
+[mergetool]
+prompt = false
