@@ -4,32 +4,32 @@ let mapleader = " "
 call plug#begin('~/.vim/plug')
 
 " ## NCM - Completion Manager
-Plug 'ncm2/ncm2'
-Plug 'roxma/nvim-yarp'
+":Plug 'ncm2/ncm2'
+"Plug 'roxma/nvim-yarp'
 
-        " NOTE: you need to install completion sources to get completions. Check
-        "   our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
-        Plug 'ncm2/ncm2-bufword'
-        Plug 'ncm2/ncm2-path'
+" NOTE: you need to install completion sources to get completions. Check
+"   our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+"Plug 'ncm2/ncm2-bufword'
+"Plug 'ncm2/ncm2-path'
 
-        " enable ncm2 for all buffers
-        autocmd BufEnter * call ncm2#enable_for_buffer()
+" enable ncm2 for all buffers
+" autocmd BufEnter * call ncm2#enable_for_buffer()
 
-        " IMPORTANT: :help Ncm2PopupOpen for more information
-        set completeopt=noinsert,menuone,noselect
+" IMPORTANT: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
 
-        " When the <Enter> key is pressed while the popup menu is visible, it only
-        " hides the menu. Use this mapping to close the menu and also start a new
-        " line.
-        inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
+" When the <Enter> key is pressed while the popup menu is visible, it only
+" hides the menu. Use this mapping to close the menu and also start a new
+" line.
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>\<cr>" : "\<CR>")
 
-        " Use <TAB> to select the popup menu:
-        inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-        inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Use <TAB> to select the popup menu:
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " ## Hard mode
-Plug 'takac/vim-hardtime' 
-        let g:hardtime_default_on = 1
+" Plug 'takac/vim-hardtime' 
+" let g:hardtime_default_on = 1
 
 " ## Language Client
 Plug 'autozimu/LanguageClient-neovim', {
@@ -37,12 +37,12 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'do': 'bash install.sh',
     \ }
 
-        let g:LanguageClient_serverCommands = {
-            \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-            \ }
+let g:LanguageClient_serverCommands = {
+                                    \   'rust': ['rustup', 'run', 'nightly', 'rls'],
+                                    \ }
 
-        " ## Automatically start language servers.
-        let g:LanguageClient_autoStart = 1
+" ## Automatically start language servers.
+let g:LanguageClient_autoStart = 1
 
 " ## Syntax Support
 "  - Rust
@@ -80,23 +80,23 @@ if exists('+termguicolors')
 endif
 
 syntax enable
-colorscheme onedark
 set number relativenumber
 
 " ## lightline
 let g:lightline = {
-  \ 'colorscheme': 'onedark',
   \ 'separator':    { 'left': '', 'right': '' },
   \ 'subseparator': { 'left': '', 'right': '' }
   \ }
 set noshowmode " Hide default -- INSERT -- line
+
+colorscheme onedark
 
 " # Vim configuration
 set hidden         " Allow multiple buffers open at once
 set expandtab      " <TAB> inserts spaces, not \t
 set softtabstop=4  " <TAB> inserts 4 spaces
 set number         " show line numbers
-set cursorline     " highlight current line
+" set cursorline     " highlight current line
 set wildmenu       " visual autocomplete for command menu
 filetype indent on " load filetype-specific indent files
 set showcmd        " show leader cmd

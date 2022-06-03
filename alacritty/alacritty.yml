@@ -1,61 +1,23 @@
 # Font configuration (changes require restart)
+# ->
 font:
-  size: 12.0
+  ligatures: true
+  size: 20.0
   normal:
-    family: 'Input'
+    family: 'Iosevka Term Extended'
   bold:
-    family: 'Input'
+    family: 'Iosevka Semibold Extended'
   italic:
-    family: 'Input'
+    family: 'Iosevka Term'
 
 key_bindings:
-  - { key: Comma,   mods: Control,  command: { program: "nvim", args: ["~/.config/alacritty/alacritty.yml"] } }
+  - { key: Comma,   mods: Control,  command: { program: "kak", args: ["~/.config/alacritty/alacritty.yml"] } }
   - { key: Up,      mods: Shift,    action: "ScrollLineUp" }
   - { key: Down,    mods: Shift,    action: "ScrollLineDown" }
 
-background_opacity: 0.9
-
-# Base16 Material Palenight 256 - alacritty color config
-# Nate Peterson
 custom_cursor_colors: true
 
-colors:
-  # Default colors
-  primary:
-    background: '0x292d3e'
-    foreground: '0x959dcb'
-
-  # Colors the cursor will use if `custom_cursor_colors` is true
-  cursor:
-    text: '0x292d3e'
-    cursor: '0x959dcb'
-
-  # Normal colors
-  normal:
-    black:   '0x292d3e'
-    red:     '0xf07178'
-    green:   '0xc3e88d'
-    yellow:  '0xffcb6b'
-    blue:    '0x82aaff'
-    magenta: '0xc792ea'
-    cyan:    '0x89ddff'
-    white:   '0x959dcb'
-
-  # Bright colors
-  bright:
-    black:   '0x676e95'
-    red:     '0xf07178'
-    green:   '0xc3e88d'
-    yellow:  '0xffcb6b'
-    blue:    '0x82aaff'
-    magenta: '0xc792ea'
-    cyan:    '0x89ddff'
-    white:   '0xffffff'
-
-  indexed_colors:
-    - { index: 16, color: '0xf78c6c' }
-    - { index: 17, color: '0xff5370' }
-    - { index: 18, color: '0x444267' }
-    - { index: 19, color: '0x32374d' }
-    - { index: 20, color: '0x8796b0' }
-    - { index: 21, color: '0x959dcb' }
+window:
+  padding:
+    x: 10
+    y: 10

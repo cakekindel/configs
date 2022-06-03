@@ -1,17 +1,45 @@
 # =====[ Plugins ]=====
+require-module connect
+
 ## Initialize Plug.kak
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
 
 ## fzf
-plug "andreyorst/fzf.kak"
+plug "andreyorst/fzf.kak" config %{
+  set global fzf_terminal_command 'kitty kak -c %val{session} -e "%arg{@}"'
+}
+
 map global user f ': fzf-mode<ret>' \
     -docstring "search using fzf"
+
+plug "raiguard/one.kak" theme
+plug "caksoylar/kakoune-smooth-scroll" config %{
+  hook global WinCreate [^*].* %{
+    hook -once window WinDisplay .* %{
+      smooth-scroll-enable
+    }
+  }
+}
+
+plug "andreyorst/powerline.kak" defer powerline %{
+  powerline-theme default
+  powerline-format global 'lsp git bufname line_column mode_info filetype position'
+} config %{
+  powerline-start
+}
 
 ## Language Server
 eval %sh{kak-lsp --kakoune -s ${kak_session}}
 lsp-enable
 
-lsp auto-signature-help-disable
+# hook global WinSetOption filetype=rust %{
+#   hook window -group rust-inlay-hints BufReload .* rust-analyzer-inlay-hints
+#   hook window -group rust-inlay-hints NormalIdle .* rust-analyzer-inlay-hints
+#   hook window -group rust-inlay-hints InsertIdle .* rust-analyzer-inlay-hints
+#   hook -once -always window WinSetOption filetype=.* %{
+#     remove-hooks window rust-inlay-hints
+#   }
+# }
 
 ### Use tab to cycle through suggestions
 hook global InsertCompletionShow .* %{
@@ -33,21 +61,33 @@ hook global InsertCompletionHide .* %{
 }
 
 # =====[ Visual ]=====
+colorscheme default
+
 ## Faces
-
-# render whitespace same as Line Numbers, but dimmer
-face global Whitespace +d@LineNumbers
-
-# High contrast selection colors
-face global PrimarySelection black,blue+Ffg
-face global SecondarySelection black,white+Ffg
-
-# High contrast menu colors
+# 
+# face global keyword magenta,default
+# face global value magenta,default
+# face global meta blue,default
+# face global function default,default
+# face global attribute blue,default
+# face global string yellow,default
+# 
+# face global documentation default,default+d
+# face global comment cyan,default+d
+# 
+# # render whitespace same as Line Numbers, but dimmer
+# face global Whitespace +d@LineNumbers
+# 
+# # High contrast selection colors
+# face global PrimarySelection black,blue+Ffg
+# face global SecondarySelection black,white+Ffg
+# 
+# # High contrast menu colors
 face global MenuForeground black,blue+Ffg
 face global MenuBackground black,white+Ffg
 
 ## Assistant
-#set-option global ui_options "ncurses_assistant=cat"
+set-option global ui_options "ncurses_assistant=cat"
 
 ## Relative line numbers
 add-highlighter global/ number-lines -relative -hlcursor -min-digits 3
@@ -62,6 +102,7 @@ add-highlighter global/ show-whitespaces
 ## --- User Mode ---
 map global user y "<a-|>xclip -i -selection clipboard<ret>" -docstring "yank current selection to system clipboard"
 map global user h ":lsp-hover<ret>" -docstring "trigger language server hover"
+map global user l %{: enter-user-mode lsp<ret>} -docstring "LSP"
 
 map global user < "_i<lt><esc>a<gt><esc>m" \
     -docstring "trim + wrap current selection with angles"
@@ -71,6 +112,12 @@ map global user ( "_i(<esc>a)<esc>m" \
 
 map global user r ":enter-user-mode rust<ret>" \
     -docstring "🦀"
+
+map global user q ":enter-user-mode qwick<ret>" \
+    -docstring "qwick"
+
+map global user p ":enter-user-mode purescript<ret>" \
+    -docstring "purescript"
 
 ### Markdown Mode
 declare-user-mode markdown
@@ -95,6 +142,23 @@ map global rust s ",(iSome<esc>B<a-:>" \
 map global rust n ",(iNone<esc>B<a-:>" \
     -docstring "None(___)"
 
+### Qwick Mode
+declare-user-mode qwick
+map global qwick s "<a-!>xargs -0 -I%% psql 'postgresql://qwick_owner:1234@localhost:5433/qwick_dev_local' --pset=pager=off -x -c %% 2>&1<ret>" \
+    -docstring "Run selection as psql query"
+
+### Purescript Mode
+declare-user-mode purescript
+
+map global purescript m "module ___ where<ret><ret>import Prelude<a-/>___<ret>" \
+    -docstring "New Module"
+
+map global purescript a "i∀<esc>" \
+    -docstring "forall char (∀)"
+
+hook global BufCreate .*\.re %{
+  set-option buffer filetype ocaml
+}
 
 ## --- Insert Mode ---
 ### Use j-k to exit
@@ -104,12 +168,7 @@ hook global InsertChar k %{ try %{
 }}
 
 ## "SmartTab"
-plug "andreyorst/smarttab.kak"
-
-### Tab behavior
-hook global ModuleLoaded smarttab %{
-    set-option global softtabstop 4 # tab = 4 spaces
-}
-
-# always use spaces
-hook global WinSetOption .* expandtab
+# plug "andreyorst/smarttab.kak" do %{
+#   set-option global softtabstop 4 # tab = 4 spaces
+#   hook global WinSetOption .* expandtab
+# }

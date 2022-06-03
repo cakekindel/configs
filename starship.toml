@@ -1,32 +1,29 @@
 # docs [https://starship.rs/config/]
 
-prompt_order = [
-    "battery",
-    "time",
-    "directory",
-    "git_branch",
-    "git_commit",
-    "git_state",
-    "git_status",
-    "hg_branch",
-    "line_break",
-    "rust",
-    "nodejs",
-    "env_var",
-    "cmd_duration",
-    "line_break",
-    "character"
-]
+format = """$battery\
+    $time\
+    $directory\
+    $git_branch\
+    $git_commit\
+    $git_state\
+    $git_status\
+    $hg_branch\
+    $env_var\
+    $cmd_duration\
+    $line_break\
+    $character\
+"""
+
+[[battery.display]]
+threshold = 100
 
 [directory]
-prefix = "in 🗺️  "
+format = " [$path]($style)[$read_only]($read_only_style) "
 
 [time]
 disabled = false
-format = "🕰️  %I:%M%p"
-
-[character]
-symbol = "➜"
+time_format = "%H:%M"
+format = "[$time]($time_style)"
 
 [package]
 disabled = true
