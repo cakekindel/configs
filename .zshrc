@@ -5,6 +5,7 @@ ZSH_THEME="agnoster"
 plugins=(rust git)
 
 source $ZSH/oh-my-zsh.sh
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 eval $(starship init zsh)
 
@@ -18,6 +19,10 @@ export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 export EDITOR='kak'
 
 alias sudo=doas
+alias tar=bsdtar
+
+## gcloud
+source /usr/share/aur/google-cloud-sdk/pkg/google-cloud-sdk/opt/google-cloud-sdk/path.zsh.inc
 
 ## asdf
 . /opt/asdf-vm/asdf.sh
@@ -25,25 +30,11 @@ alias sudo=doas
 ## opam
 [[ ! -r /home/orion/.opam/opam-init/init.zsh ]] || source /home/orion/.opam/opam-init/init.zsh
 
-# ==> Helpers
-## monitors
-mon() {
-  xrandr --output eDP --mode 1920x1200
-}
-
-mon_work() {
-  xrandr --output eDP --mode 1920x1200 \
-         --output DisplayPort-2 --mode 2560x1440 --left-of eDP
-}
-
-mon_home() {
-  xrandr --output eDP --mode 1920x1200 \
-         --output DisplayPort-1 --mode 2560x1440 --left-of eDP
-}
-
 # ==> Shell Utils
 ## Autojump
-source /etc/profile.d/autojump.zsh
+[[ -s /home/orion/.autojump/etc/profile.d/autojump.sh ]] && source /home/orion/.autojump/etc/profile.d/autojump.sh
+
+autoload -U compinit && compinit -u
 
 ## fzf
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -52,7 +43,9 @@ eval $(thefuck --alias)
 alias cg='cargo'
 alias cgn='cargo +nightly'
 
-wal -Rq
+(wal -R &>/dev/null &)
 
 ## Qwick
-alias brokedb="sudo chown -R $USER db-data* || echo && yarn stop && yarn db:clean && yarn db:refresh:fast && yarn start:fast && yarn migrate:local && yarn get-schema"
+alias brokedb="sudo chown -R $USER db-data* || echo && yarn stop && yarn db:clean && yarn db:refresh && yarn start:fast && yarn migrate:local && yarn get-schema && sudo chmod 777 -R db-data*"
+alias resetdb=brokedb
+alias scorched_earth=brokedb

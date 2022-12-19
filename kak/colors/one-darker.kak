@@ -86,8 +86,8 @@ set-face global Whitespace "rgb:%opt{comment}"
 # PLUGINS
 
 # kak-lsp
-set-face global InlayHint "rgb:%opt{comment}"
-set-face global parameter "rgb:%opt{fg}+i"
+set-face global InlayHint "+d@type"
+set-face global parameter "+i@variable"
 set-face global enum "rgb:%opt{cyan}"
 set-face global InlayDiagnosticError "rgb:%opt{lightred}"
 set-face global InlayDiagnosticWarning "rgb:%opt{lightorange}"
@@ -124,4 +124,4 @@ set-face global InfoDiagnosticInformation InlayDiagnosticInfo
 set-face global InfoDiagnosticWarning InlayDiagnosticWarning
 
 # kak-rainbower
-try %{ set-option global rainbow_colors "rgb:ffd700" "rgb:da70d6" "rgb:87cefa" }
+try %{ set-option global rainbow_colors "rgb:%opt{lightorange}" "rgb:%opt{magenta}" "rgb:%opt{blue}" }

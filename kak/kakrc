@@ -5,8 +5,10 @@ require-module connect
 source "%val{config}/plugins/plug.kak/rc/plug.kak"
 
 ## fzf
-plug "andreyorst/fzf.kak" config %{
-  set global fzf_terminal_command 'kitty kak -c %val{session} -e "%arg{@}"'
+plug "cakekindel/fzf.kak" branch "master" config %{} defer "fzf" %{
+  # set global fzf_terminal_command 'kitty kak -c %val{session} -e "%arg{@}"'
+} defer "fzf-grep" %{
+  set global fzf_grep_include_filename true
 }
 
 map global user f ': fzf-mode<ret>' \
@@ -21,7 +23,7 @@ plug "caksoylar/kakoune-smooth-scroll" config %{
   }
 }
 
-plug "andreyorst/powerline.kak" defer powerline %{
+  plug "andreyorst/powerline.kak" defer powerline %{
   powerline-theme default
   powerline-format global 'lsp git bufname line_column mode_info filetype position'
 } config %{
@@ -100,9 +102,14 @@ add-highlighter global/ show-whitespaces
 
 # =====[ Key Bindings ]=====
 ## --- User Mode ---
+
+map global user o ":e %%sh{echo `realpath -m $kak_buffile/../$kak_selection`}<ret>" -docstring "open selection as file in current dir"
 map global user y "<a-|>xclip -i -selection clipboard<ret>" -docstring "yank current selection to system clipboard"
 map global user h ":lsp-hover<ret>" -docstring "trigger language server hover"
 map global user l %{: enter-user-mode lsp<ret>} -docstring "LSP"
+
+map global user . "i∘<esc>" \
+    -docstring "trim + wrap current selection with angles"
 
 map global user < "_i<lt><esc>a<gt><esc>m" \
     -docstring "trim + wrap current selection with angles"
@@ -110,14 +117,33 @@ map global user < "_i<lt><esc>a<gt><esc>m" \
 map global user ( "_i(<esc>a)<esc>m" \
     -docstring "trim + wrap current selection with parens"
 
+map global user / "/(?i)" \
+    -docstring "case insensitive search"
+
 map global user r ":enter-user-mode rust<ret>" \
     -docstring "🦀"
+
+map global user g ":enter-user-mode git<ret>" \
+    -docstring "git"
 
 map global user q ":enter-user-mode qwick<ret>" \
     -docstring "qwick"
 
 map global user p ":enter-user-mode purescript<ret>" \
     -docstring "purescript"
+
+### Git
+declare-user-mode git
+declare-user-mode git-three-way
+# map global git 3 ":enter-user-mode git-three-way<ret>" -docstring "3-way merge conflict"
+
+map global git n "/<lt>{7} HEAD.*?<gt>{7}.*?\n<ret>" -docstring "next conflict"
+map global git <a-h> "s<lt>{7} HEAD\n|\|{7}.*?<gt>{7}.*?\n<ret>d<space>" -docstring "from selection, take changes from HEAD, discard others"
+map global git <a-u> "s<lt>{7} HEAD.*?={7}|<gt>{7}.*?\n<ret>d<space>" -docstring "from selection, changes from upstream, discard others"
+map global git h ",gn,g<a-h>" -docstring "from next conflict, take changes from HEAD, discard others"
+map global git u ",gn,g<a-u>" -docstring "from next conflict, changes from upstream, discard others"
+map global git H "%%,g<a-h>" -docstring "take all changes from HEAD, discard others"
+map global git U "%%,g<a-u>" -docstring "take all changes from upstream, discard others"
 
 ### Markdown Mode
 declare-user-mode markdown
@@ -150,22 +176,16 @@ map global qwick s "<a-!>xargs -0 -I%% psql 'postgresql://qwick_owner:1234@local
 ### Purescript Mode
 declare-user-mode purescript
 
-map global purescript m "module ___ where<ret><ret>import Prelude<a-/>___<ret>" \
+map global purescript m "imodule ___ where<ret><ret>import Prelude<esc><a-/>___<ret>" \
     -docstring "New Module"
 
-map global purescript a "i∀<esc>" \
-    -docstring "forall char (∀)"
+map global purescript a "%%s\bforall\b<ret>c∀<esc><space>" \
+    -docstring "replace all foralls with unicode char (∀)"
 
 hook global BufCreate .*\.re %{
   set-option buffer filetype ocaml
+  set-option buffer formatcmd refmt
 }
-
-## --- Insert Mode ---
-### Use j-k to exit
-hook global InsertChar k %{ try %{
-  exec -draft hH <a-k>jk<ret> d
-  exec <esc>
-}}
 
 ## "SmartTab"
 # plug "andreyorst/smarttab.kak" do %{

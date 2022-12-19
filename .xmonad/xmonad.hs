@@ -18,27 +18,21 @@ import XMonad.Actions.SpawnOn (spawnHere);
 import XMonad.Hooks.EwmhDesktops (ewmh);
 import XMonad.Util.EZConfig (additionalKeysP);
 
-screenPadding = 20
-windowMargin = 10
-
 main = xmonad $ ewmh $ gnomeConfig
     { terminal = "kitty zsh"
     , borderWidth = 0
     , modMask  = mod4Mask
-    , startupHook = do
-                      spawnHere "picom -b --experimental-backends"
-                      spawn "wal -Rq"
+    , startupHook = spawnHere "picom -b"
     , layoutHook =
         -- Window / Screen Padding
-        spacingRaw True
+        spacingRaw
+            True
             -- top bot rght lft
-            (Border sp sp sp sp) True -- Screen
-            (Border wm wm wm wm) True -- Windows
+            (Border 20 20 20 20) True -- Screen
+            (Border 20 20 20 20) True -- Windows
         $ Tall 1 (3/100) (1/2) ||| Full ||| Mirror (Tall 1 (3/100) (1/2))
     }
     `additionalKeysP`
     [ ("<XF86MonBrightnessUp>", spawn "light -s sysfs/backlight/acpi_video0 -A 5")
     , ("<XF86MonBrightnessDown>", spawn "light -s sysfs/backlight/acpi_video0 -U 5")
     ]
-  where sp = screenPadding
-        wm = windowMargin
