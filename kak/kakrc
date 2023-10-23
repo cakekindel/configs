@@ -15,15 +15,8 @@ map global user f ': fzf-mode<ret>' \
     -docstring "search using fzf"
 
 plug "raiguard/one.kak" theme
-plug "caksoylar/kakoune-smooth-scroll" config %{
-  hook global WinCreate [^*].* %{
-    hook -once window WinDisplay .* %{
-      smooth-scroll-enable
-    }
-  }
-}
 
-  plug "andreyorst/powerline.kak" defer powerline %{
+plug "andreyorst/powerline.kak" defer powerline %{
   powerline-theme default
   powerline-format global 'lsp git bufname line_column mode_info filetype position'
 } config %{
@@ -32,16 +25,9 @@ plug "caksoylar/kakoune-smooth-scroll" config %{
 
 ## Language Server
 eval %sh{kak-lsp --kakoune -s ${kak_session}}
-lsp-enable
 
-# hook global WinSetOption filetype=rust %{
-#   hook window -group rust-inlay-hints BufReload .* rust-analyzer-inlay-hints
-#   hook window -group rust-inlay-hints NormalIdle .* rust-analyzer-inlay-hints
-#   hook window -group rust-inlay-hints InsertIdle .* rust-analyzer-inlay-hints
-#   hook -once -always window WinSetOption filetype=.* %{
-#     remove-hooks window rust-inlay-hints
-#   }
-# }
+lsp-enable
+lsp-inlay-hints-enable global
 
 ### Use tab to cycle through suggestions
 hook global InsertCompletionShow .* %{
@@ -89,7 +75,7 @@ face global MenuForeground black,blue+Ffg
 face global MenuBackground black,white+Ffg
 
 ## Assistant
-set-option global ui_options "ncurses_assistant=cat"
+set-option global ui_options "terminal_assistant=clippy"
 
 ## Relative line numbers
 add-highlighter global/ number-lines -relative -hlcursor -min-digits 3
@@ -104,7 +90,7 @@ add-highlighter global/ show-whitespaces
 ## --- User Mode ---
 
 map global user o ":e %%sh{echo `realpath -m $kak_buffile/../$kak_selection`}<ret>" -docstring "open selection as file in current dir"
-map global user y "<a-|>xclip -i -selection clipboard<ret>" -docstring "yank current selection to system clipboard"
+map global user y "<a-|>xsel -b<ret>" -docstring "yank current selection to system clipboard"
 map global user h ":lsp-hover<ret>" -docstring "trigger language server hover"
 map global user l %{: enter-user-mode lsp<ret>} -docstring "LSP"
 
@@ -167,6 +153,9 @@ map global rust s ",(iSome<esc>B<a-:>" \
     -docstring "Some(___)"
 map global rust n ",(iNone<esc>B<a-:>" \
     -docstring "None(___)"
+
+map global rust o ",(iOk<esc>B<a-:>" \
+    -docstring "Ok(___)"
 
 ### Qwick Mode
 declare-user-mode qwick

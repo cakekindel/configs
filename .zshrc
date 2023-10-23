@@ -8,15 +8,18 @@ source $ZSH/oh-my-zsh.sh
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 
 eval $(starship init zsh)
+eval $(atlas completion zsh)
+
+source /home/orion/.secrets
 
 # ==> PATH / Environment
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH:/home/linuxbrew/.linuxbrew/bin:$HOME/.cargo/bin
+export PATH=$HOME/bin:$HOME/.bun/bin:$HOME/.local/bin:/usr/local/bin:$PATH:/home/linuxbrew/.linuxbrew/bin:$HOME/.cargo/bin
 export SSLKEYLOGFILE="$HOME/.ssl-key.log"
 export GPG_TTY=$(tty)
 export ANDROID_HOME=$HOME/Android/Sdk/
-export JAVA_HOME=$HOME/src/aur/android-studio/src/android-studio/jre/
 export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
 export EDITOR='kak'
+source ~/.asdf/plugins/java/set-java-home.zsh
 
 alias sudo=doas
 alias tar=bsdtar
@@ -49,3 +52,6 @@ alias cgn='cargo +nightly'
 alias brokedb="sudo chown -R $USER db-data* || echo && yarn stop && yarn db:clean && yarn db:refresh && yarn start:fast && yarn migrate:local && yarn get-schema && sudo chmod 777 -R db-data*"
 alias resetdb=brokedb
 alias scorched_earth=brokedb
+
+[ -s "/home/orion/.bun/_bun" ] && source "/home/orion/.bun/_bun"
+export BUN_INSTALL="$HOME/.bun"
